@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 
 const NoticiaSchema = mongoose.Schema(
   {
-    titulo: String,
-    conteudo: String,
+    titulo: { type: String, required: true },
+    conteudo: { type: String, required: true },
   }, 
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model('Noticia', NoticiaSchema);

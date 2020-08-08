@@ -2,15 +2,20 @@
 
 const express = require("express");
 const router = express.Router();
-const noticiaController = require('../controllers/NoticiaController');
+const NoticiaController = require('../controllers/NoticiaController');
+const UserController = require('../controllers/UserController');
 
-const noticiaCtrl = new noticiaController();
+const noticiaCtrl = new NoticiaController();
+const userCtrl = new UserController();
 
-router.get('/noticias', noticiaCtrl.findAll);
-router.get('/noticia/:id', noticiaCtrl.findOne);
+router.post('/register', userCtrl.create);
+router.post('/login', userCtrl.login);
 
-router.post('/noticia', noticiaCtrl.create);
-router.put('/noticia/:id', noticiaCtrl.update);
-router.delete('/noticia/:id', noticiaCtrl.remove);
+router.get('/noticia/:id', userCtrl.verifyJWT, noticiaCtrl.findOne);
+router.get('/noticias', userCtrl.verifyJWT, noticiaCtrl.findAll);
+
+router.post('/noticia', userCtrl.verifyJWT, noticiaCtrl.create);
+router.put('/noticia/:id', userCtrl.verifyJWT, noticiaCtrl.update);
+router.delete('/noticia/:id', userCtrl.verifyJWT, noticiaCtrl.remove);
 
 module.exports = router;

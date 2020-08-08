@@ -1,75 +1,38 @@
 "use strict";
 
-const Noticia = require('../models/Noticia');
+const Service = require('../service/NoticiaService');
+const noticiaService = new Service();
 
 class NoticiaController {
-
   create(req, res) {
-    const noticia = new Noticia({
-      titulo: req.body.titulo,
-      conteudo: req.body.conteudo,
-    });
-
-    noticia.save().then(data => {
-      res.send(data);
-    }).catch(err => {
-      res.status(500).send({
-        message: err.message
-      });
-    })
+    noticiaService.create(req.body)
+                  .then(noticia => res.json(noticia))
+                  .catch(err => res.status(500).send({ message: err.message }));
   };
 
   findAll(req, res) {
-    Noticia.find().select('-__v')
-      .then(noticias => {
-        res.send(noticias);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: err.message
-        });
-      })
+    noticiaService.findAll()
+           .then(noticias => res.send(noticias))
+           .catch(err => res.status(500).send({ message: err.message }))
   };
 
   findOne(req, res) {
-    const { id } = req.params;
-
-    Noticia.findById(id).select('-__v')
-      .then(noticia => {
-        res.send(noticia);
-      }).catch(err => {
-        return res.status(500).send({
-          message: err.message
-        })
-      })
+    noticiaService.findOne(req.params)
+           .then(noticia => noticia ? res.send(noticia) : 
+                                      res.status(404).send({ message: "Noticia não encontrada!"}))
+           .catch(err => res.status(err.status).send({ message: err.message }))
   };
 
   update(req, res) {
-    const { id } = req.params;
-    const { titulo, conteudo } = req.body;
-
-    Noticia.findByIdAndUpdate(id, {
-      titulo: titulo, 
-      conteudo: conteudo
-    }, { new: true }).then(noticia => {
-      res.send(noticia);
-    }).catch(err => {
-      res.status(500).send({
-        message: err.message
-      })
-    });
+    noticiaService.update(req.params.id, req.body)
+                  .then(noticia => res.send(noticia))
+                  .catch(err => res.status(err.status).send({ message: err.message }));
   };
 
   remove(req, res) {
-    const { id } = req.params;
-
-    Noticia.findByIdAndRemove(id).then(noticia => {
-      res.send(noticia);
-    }).catch(err => {
-      res.status(500).send({
-        message: err.message
-      })
-    });
+    noticiaService.remove(req.params)
+                  .then(noticia => res.send(noticia))
+                  .catch(err => res.status(err.status).send({ message: err.message }));
   };
 }
 

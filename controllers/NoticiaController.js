@@ -1,6 +1,6 @@
 "use strict";
 
-const Service = require('../service/NoticiaService');
+const Service = require('../services/NoticiaService');
 const noticiaService = new Service();
 
 class NoticiaController {

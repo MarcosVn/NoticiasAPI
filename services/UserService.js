@@ -10,7 +10,7 @@ class UserService {
     const user = await Usuario.findOne({ usuario });
 
     if (user && bcrypt.compareSync(senha, user.senha)) {
-      const token = jwt.sign({ sub: user.id }, process.env.SECRET, { expiresIn: 600000 });
+      const token = jwt.sign({ sub: user.id }, process.env.SECRET, { expiresIn: '1d' });
       return { auth: true, token: token };
     }
 
